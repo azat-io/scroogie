@@ -1,0 +1,27 @@
+# Editor SDKs
+
+.idea
+.vim
+.vscode
+
+# Env
+
+.env
+
+# Logs
+
+yarn-debug.log*
+yarn-error.log
+
+# Misc
+
+.DS_Store
+
+# Yarn
+
+.yarn/*
+!.yarn/cache
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

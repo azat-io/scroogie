@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["es2017"],
+    "types": ["@types/jest"],
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "strict": true,
+    "alwaysStrict": true,
+    "baseUrl": "./src",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["./node_modules/@types", "./src/typings"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
