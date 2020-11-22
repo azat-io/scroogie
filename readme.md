@@ -6,7 +6,7 @@
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/azat-io/scroogie?color=brightgreen)](https://github.com/azat-io/scroogie/blob/master/package.json)
 [![License](https://img.shields.io/github/license/azat-io/scroogie?color=brightgreen)](https://github.com/azat-io/scroogie/blob/master/license)
 
-<img src="https://user-images.githubusercontent.com/5698350/99881668-17897680-2c2c-11eb-8e9e-c0215bbbb973.jpg" style="width: 400px; height: 400px">
+<img src="https://user-images.githubusercontent.com/5698350/99881668-17897680-2c2c-11eb-8e9e-c0215bbbb973.jpg" align="right" width="300px" height="300px">
 
 A telegram bot that helps to calculate the financial expenses of a family. Inspired by an article in [Tinkoff journal](https://journal.tinkoff.ru/spreadsheet/)
 
