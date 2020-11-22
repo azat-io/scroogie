@@ -16,7 +16,13 @@ import {
 
 import bot from '../bot'
 
-import { ADD_CATEGORY, BASE, SET_BUDGET_SUM, SET_COST_SUM } from '../constants'
+import {
+  ADD_CATEGORY,
+  BASE,
+  REMOVE_COST,
+  SET_BUDGET_SUM,
+  SET_COST_SUM,
+} from '../constants'
 
 import start from './start'
 
@@ -24,14 +30,17 @@ import addCategory from './add-category'
 import base from './base'
 import cancel from './cancel'
 import dailyReport from './daily-report'
+import getReport from './get-report'
+import getSettings from './get-settings'
 import help from './help'
 import removeCategory from './remove-category'
+import removeCost from './remove-cost'
+import removeCostNum from './remove-cost-num'
 import setBudget from './set-budget'
 import setBudgetSum from './set-budget-sum'
 import setCost from './set-cost'
 import setCostSum from './set-cost-sum'
-import getReport from './get-report'
-import getSettings from './get-settings'
+
 import state, { State, Status } from './state'
 
 type Command = {
@@ -64,6 +73,11 @@ const commands: Command[] = [
     command: 'set_cost',
     description: 'Добавить обязательную трату',
     action: setCost,
+  },
+  {
+    command: 'remove_cost',
+    description: 'Удалить обязательную трату',
+    action: removeCost,
   },
   {
     command: 'remove_category',
@@ -102,6 +116,7 @@ bot.on('text', (context: TelegrafContext) => {
   const handleMessage = (cond([
     [status(ADD_CATEGORY), addCategory],
     [status(BASE), base],
+    [status(REMOVE_COST), removeCostNum],
     [status(SET_BUDGET_SUM), setBudgetSum],
     [status(SET_COST_SUM), setCostSum],
   ]) as unknown) as (context: TelegrafContext, state: State) => any

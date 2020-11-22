@@ -5,6 +5,7 @@ import {
   ADD_CATEGORY,
   BASE,
   REMOVE_CATEGORY,
+  REMOVE_COST,
   SET_BUDGET_SUM,
   SET_COST_SUM,
 } from '../constants'
@@ -13,6 +14,7 @@ export type Status =
   | typeof ADD_CATEGORY
   | typeof BASE
   | typeof REMOVE_CATEGORY
+  | typeof REMOVE_COST
   | typeof SET_BUDGET_SUM
   | typeof SET_COST_SUM
 

@@ -1,4 +1,5 @@
 import {
+  always,
   assoc,
   compose,
   concat,
@@ -31,7 +32,11 @@ const setSettings = async ({
   const hundleQuery = ifElse(
     isNil,
     async () => {
-      const newSettings = merge(new Settings(), { budget, costs: [cost] })
+      const newSettings = merge(new Settings(), {
+        id: 'settings',
+        budget,
+        costs: ifElse(isNil, always([]), always([cost]))(cost),
+      })
       await repository.save(newSettings)
       return newSettings
     },
@@ -47,7 +52,7 @@ const setSettings = async ({
         ),
         when(() => notNil(budget), assoc('budget', budget)),
       )({})
-      const updatedSettings = { ...settings, ...newData }
+      const updatedSettings = { ...settings, ...newData, id: 'settings' }
 
       await repository.save(updatedSettings)
       return updatedSettings

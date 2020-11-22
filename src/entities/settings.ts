@@ -1,11 +1,11 @@
 /* eslint-disable fp/no-class */
 
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, PrimaryColumn } from 'typeorm'
 
 @Entity()
 class Settings {
-  @PrimaryGeneratedColumn()
-  public id!: number
+  @PrimaryColumn()
+  public id!: string
 
   @Column({
     type: 'float',

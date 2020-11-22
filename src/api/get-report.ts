@@ -3,7 +3,6 @@ import puppeteer from 'puppeteer'
 import {
   __,
   add,
-  addIndex,
   always,
   both,
   compose,
@@ -24,14 +23,9 @@ import {
 
 import { getData, getSettings } from '.'
 import { DataElement } from '../typings'
-import { formatMoney } from '../utils'
+import { formatMoney, reduceIndexed } from '../utils'
 
 const getReport = async () => {
-  const reduceIndexed = addIndex(reduce) as <T, TResult, R extends T[]>(
-    iterator: (acc: TResult, elem: T, key: number, list: R) => TResult,
-    acc: TResult,
-    list: R,
-  ) => TResult
   const isOdd = compose(equals(1), modulo(__, 2))
   const settings = await getSettings()
   const budget: number = propOr(0, 'budget', settings)

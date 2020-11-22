@@ -2,7 +2,7 @@ import { settingsRepository } from '../repositories'
 
 const getSettings = async () => {
   const repository = settingsRepository()
-  const settings = await repository.findOne({ id: 1 })
+  const settings = await repository.findOne({ id: 'settings' })
 
   return settings
 }

@@ -35,7 +35,7 @@ const getSettings = curry((context: TelegrafContext) =>
           context.replyWithMarkdown(
             join(' ', [
               'На текущий момент действуют следующие настройки приложения:',
-              `\n\n*Доход:* ${budget}\n\n*Обязательные расходы*:${costs}`,
+              `\n\n*Доход:* ${budget}\n\n*Обязательные расходы*: ${costs}`,
             ]),
           )
         },

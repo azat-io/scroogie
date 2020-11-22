@@ -4,7 +4,7 @@ export type Cost = {
 }
 
 export interface Settings {
-  id: number
+  id: 'settings'
   budget: number
   costs: Cost[]
 }
