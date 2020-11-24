@@ -30,6 +30,7 @@ import addCategory from './add-category'
 import base from './base'
 import cancel from './cancel'
 import dailyReport from './daily-report'
+import getCategoryReport from './get-category-report'
 import getReport from './get-report'
 import getSettings from './get-settings'
 import help from './help'
@@ -58,6 +59,11 @@ const commands: Command[] = [
     command: 'get_report',
     description: 'Получить отчёт по текущему расчётному периоду',
     action: getReport,
+  },
+  {
+    command: 'get_category_report',
+    description: 'Получить отчёт о категориях по текущему расчётному периоду',
+    action: getCategoryReport,
   },
   {
     command: 'get_settings',

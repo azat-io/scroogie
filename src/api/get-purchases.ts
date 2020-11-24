@@ -7,7 +7,10 @@ const getPurchases = async (options: {
   where: { addedAt: FindOperator<Date> }
 }) => {
   const repository = purchaseRepository()
-  const purchases: Purchase[] = await repository.find(options)
+  const purchases: Purchase[] = await repository.find({
+    ...options,
+    relations: ['category'],
+  })
   return purchases
 }
 
