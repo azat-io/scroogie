@@ -5,20 +5,18 @@ import {
   always,
   andThen,
   applySpec,
-  assoc,
   compose,
   curry,
   equals,
   F,
-  fromPairs,
+  forEach,
   gte,
   ifElse,
   invoker,
   join,
-  map,
   path,
-  props,
   tap,
+  toString,
   unary,
   when,
 } from 'ramda'
@@ -42,7 +40,7 @@ const base = (context: TelegrafContext) => {
   const NEW_CATEGORY_ID: string = '0'
   const PROBABILITY: number = 50
   const showCategories = compose(
-    (categories: { [key: string]: string }) => {
+    (categories: Map<string, string>) => {
       const menu = new MenuTemplate<TelegrafContext>(
         always(
           join('', [
@@ -96,13 +94,14 @@ const base = (context: TelegrafContext) => {
       bot.use(menuMiddleware.middleware())
       menuMiddleware.replyToContext(context)
     },
-    assoc(NEW_CATEGORY_ID, 'Новая категория'),
-    fromPairs,
-    map(
-      (props(['id', 'name']) as unknown) as (
-        categories: Category,
-      ) => [number, string],
-    ),
+    (categories: Category[]) => {
+      const data = new Map()
+      data.set(NEW_CATEGORY_ID, 'Новая категория')
+      forEach(({ id, name }) => {
+        data.set(toString(id), name)
+      }, categories)
+      return data
+    },
   )
 
   const handleMessage = ifElse(

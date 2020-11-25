@@ -8,12 +8,11 @@ import {
   compose,
   curry,
   F,
+  forEach,
   flip,
-  fromPairs,
   invoker,
-  map,
-  props,
   tap,
+  toString,
 } from 'ramda'
 
 import { getCategories, removeCategory as removeCategoryApi } from '../api'
@@ -62,10 +61,13 @@ const removeCategory = (context: TelegrafContext) => {
       bot.use(menuMiddleware.middleware())
       menuMiddleware.replyToContext(context)
     },
-    fromPairs,
-    map<Category, [number, string]>(
-      (props(['id', 'name']) as unknown) as (x: Category) => [number, string],
-    ),
+    (categories: Category[]) => {
+      const data = new Map()
+      forEach(({ id, name }) => {
+        data.set(toString(id), name)
+      }, categories)
+      return data
+    },
   )
 
   const handleMessage = compose(
