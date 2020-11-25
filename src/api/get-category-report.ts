@@ -4,25 +4,49 @@ import { Between } from 'typeorm'
 import { endOfMonth, startOfMonth } from 'date-fns/fp'
 import {
   add,
+  always,
   applySpec,
   compose,
+  concat,
+  dec,
   descend,
+  equals,
   divide,
   eqBy,
   groupWith,
   head,
+  ifElse,
+  inc,
   join,
+  last,
+  length,
+  lt,
   map,
   path,
   prop,
   reduce,
   sort,
+  splitAt,
+  when,
 } from 'ramda'
 
 import { getPurchases } from '.'
 
 import { Purchase } from '../typings'
-import { mapIndexed } from '../utils'
+import {
+  formatMoney,
+  formatPercent,
+  isOdd,
+  mapIndexed,
+  reduceIndexed,
+} from '../utils'
+
+type DataElement = {
+  color: string | undefined
+  name: string
+  sum: number
+  percent: number
+}
 
 const getCategoryReport = async () => {
   const currentDate = new Date()
@@ -47,9 +71,41 @@ const getCategoryReport = async () => {
     '#BBBD9E',
     '#666F64',
   ]
+  const MAX_LEN = length(colors)
   const makeData = compose(
+    when(
+      compose(lt(MAX_LEN), length),
+      compose(
+        (elementSegments: DataElement[][]): DataElement[] =>
+          concat(head(elementSegments) as DataElement[], [
+            reduce(
+              (
+                accumulator: DataElement,
+                element: DataElement,
+              ): DataElement => ({
+                name: accumulator.name,
+                color: accumulator.color,
+                sum: add(accumulator.sum, element.sum),
+                percent: add(accumulator.percent, element.percent),
+              }),
+              {
+                name: 'Остальное',
+                color: colors[dec(MAX_LEN)],
+                sum: 0,
+                percent: 0,
+              },
+              last(elementSegments) as DataElement[],
+            ),
+          ]),
+        splitAt(dec(MAX_LEN)) as (elements: DataElement[]) => DataElement[][],
+      ),
+    ),
     mapIndexed(
-      (element: { name: string; sum: number }, index, elementList) => ({
+      (
+        element: { name: string; sum: number },
+        index,
+        elementList,
+      ): DataElement => ({
         ...element,
         color: colors[index],
         percent: divide(
@@ -61,7 +117,7 @@ const getCategoryReport = async () => {
           ),
         ),
       }),
-    ),
+    ) as (elements: { name: string; sum: number }[]) => DataElement[],
     sort(descend(prop('sum'))),
     map(
       (applySpec({
@@ -74,7 +130,7 @@ const getCategoryReport = async () => {
       }) as unknown) as (segment: Purchase[]) => { name: string; sum: number },
     ),
   )
-  const data = makeData(segmentedPurchases)
+  const data: DataElement[] = makeData(segmentedPurchases)
 
   /* eslint-disable @typescript-eslint/indent */
   /* eslint-disable no-template-curly-in-string */
@@ -89,42 +145,77 @@ const getCategoryReport = async () => {
       'body {',
         'font-family: Verdana, Arial, Roboto, sans-serif;',
         'font-size: 15px;',
-        'margin: 48px 16px;',
+        'margin: 32px 16px;',
       '}',
       'svg {',
         'height: 200px;',
       '}',
     '</style>',
     '<div style="display: flex; justify-content: space-between;">',
-      '<svg viewBox="-1 -1 2 2" style="transform: rotate(-90deg)"></svg>',
-      '<div>',
-        reduce((accumulator, { color, name }) => join('', [
-          accumulator,
-          '<div style="',
-            'display: flex;',
-            'align-items: center;',
-            'width: 200px;',
-            'margin: 8px 0;',
-          '">',
-            '<span style="',
-              'display: inline-block;',
-              'min-width: 16px;',
-              'height: 16px;',
-              'margin-right: 8px;',
-              `background: ${color};`,
-            '">',
-            '</span>',
-            '<span style="',
-              'text-overflow: ellipsis;',
-              'overflow: hidden;',
-              'font-size: 14px;',
-              'white-space: nowrap;',
-            '">',
-              name,
-            '</span>',
-          '</div>',
-        ]), '', data),
+      '<div style="',
+        'display: flex;',
+        'align-items: center;',
+        'width: 200px;',
+        'height: 400px;',
+      '">',
+        '<svg viewBox="-1 -1 2 2" style="transform: rotate(-90deg)"></svg>',
       '</div>',
+      '<table style="',
+        'border-collapse: collapse;',
+        'border-spacing: 0;',
+        'margin: 16px 0 16px 16px;',
+        'width: 500px;',
+        'color: #333;',
+      '">',
+        '<tbody>',
+          reduceIndexed(
+            (accumulator: string,
+            { color, name, sum, percent }: DataElement,
+            index: number,
+            list: DataElement[],
+          ) => join('', [
+            accumulator,
+            '<tr style="font-size: 14px;',
+              'background: #f8f8f8;',
+              'border-bottom:',
+              ifElse(
+                compose(equals(inc(index)), length),
+                always('0;'),
+                always('1px solid #e5e5e5;'),
+              )(list),
+              'background: ',
+              ifElse(isOdd, always('#f8f8f8'), always('#fff'))(index),
+            '">',
+              '<td style="padding: 0 12px">',
+                '<span style="',
+                  'display: inline-block;',
+                  'min-width: 16px;',
+                  'height: 16px;',
+                  `background: ${color};`,
+                '">',
+                '</span>',
+              '</td>',
+              '<td style="padding: 16px 12px; max-width: 100px;">',
+                '<span style="',
+                  'display: block;',
+                  'text-overflow: ellipsis;',
+                  'overflow: hidden;',
+                  'font-size: 14px;',
+                  'white-space: nowrap;',
+                '">',
+                  name,
+                '</span>',
+              '</td>',
+              '<td style="padding: 16px 12px">',
+                formatMoney(sum),
+              '</td>',
+              '<td style="padding: 16px 12px">',
+                formatPercent(percent),
+              '</td>',
+            '</tr>',
+          ]), '', data),
+        '</tbody>',
+      '</table>',
     '</div>',
     '<script>',
       'const svgEl = document.querySelector(\'svg\');',
@@ -165,14 +256,13 @@ const getCategoryReport = async () => {
   const browser = await puppeteer.launch({ defaultViewport: null })
   const page = await browser.newPage()
   await page.setViewport({
-    width: 448,
-    height: 296,
+    width: 768,
+    height: 464,
     deviceScaleFactor: 3,
   })
   await page.setContent(html)
   const image = await page.screenshot()
   await browser.close()
-
   return image
 }
 

@@ -1,21 +1,18 @@
 import puppeteer from 'puppeteer'
 
 import {
-  __,
   add,
   always,
   both,
   compose,
   concat,
   divide,
-  equals,
   gt,
   head,
   ifElse,
   is,
   join,
   length,
-  modulo,
   multiply,
   propOr,
   reduce,
@@ -25,10 +22,9 @@ import {
 
 import { getData, getSettings } from '.'
 import { DataElement } from '../typings'
-import { formatMoney, reduceIndexed } from '../utils'
+import { formatMoney, isOdd, reduceIndexed } from '../utils'
 
 const getReport = async () => {
-  const isOdd = compose(equals(1), modulo(__, 2))
   const settings = await getSettings()
   const budget: number = propOr(0, 'budget', settings)
   const isNegative = both(is(Number), gt(0))
