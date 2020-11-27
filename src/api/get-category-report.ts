@@ -34,6 +34,7 @@ import { getPurchases } from '.'
 
 import { Purchase } from '../typings'
 import {
+  env,
   formatMoney,
   formatPercent,
   isOdd,
@@ -253,7 +254,11 @@ const getCategoryReport = async () => {
   /* eslint-enable @typescript-eslint/indent */
   /* eslint-enable no-template-curly-in-string */
 
-  const browser = await puppeteer.launch({ defaultViewport: null })
+  const browser = await puppeteer.launch({
+    executablePath: env('CHROME_BIN') || undefined,
+    args: ['--no-sandbox', '--headless', '--disable-gpu'],
+    defaultViewport: null,
+  })
   const page = await browser.newPage()
   await page.setViewport({
     width: 768,

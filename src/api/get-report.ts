@@ -22,7 +22,7 @@ import {
 
 import { getData, getSettings } from '.'
 import { DataElement } from '../typings'
-import { formatMoney, isOdd, reduceIndexed } from '../utils'
+import { env, formatMoney, isOdd, reduceIndexed } from '../utils'
 
 const getReport = async () => {
   const settings = await getSettings()
@@ -187,7 +187,11 @@ const getReport = async () => {
   ])
   /* eslint-enable @typescript-eslint/indent */
 
-  const browser = await puppeteer.launch({ defaultViewport: null })
+  const browser = await puppeteer.launch({
+    executablePath: env('CHROME_BIN') || undefined,
+    args: ['--no-sandbox', '--headless', '--disable-gpu'],
+    defaultViewport: null,
+  })
   const page = await browser.newPage()
   const getPageHeightByData = ifElse(
     is(Array),
