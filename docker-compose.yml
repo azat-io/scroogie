@@ -1,0 +1,20 @@
+# docker-compose.yml
+
+version: '3.7'
+services:
+  app:
+    build:
+      context: .
+    depends_on:
+      - postgres
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+
+  postgres:
+    image: postgres:13.1
+    ports:
+      - '35432:5432'
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
