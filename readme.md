@@ -22,6 +22,7 @@ A telegram bot that helps to calculate the financial expenses of a family. Inspi
 
 - `APP_URL` - url of the webserver, for example `https://scroogie-test.loca.lt`
 - `APP_PORT` - port of webserver
+- `DATABASE_HOST` - host of PostgreSQL database, for example `localhost`
 - `DATABASE_NAME` - name of PostgreSQL database
 - `DATABASE_USER` - user that has access to PostgreSQL database
 - `DATABASE_PASSWORD` - password of the database

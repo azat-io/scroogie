@@ -1,5 +1,6 @@
 export const APP_URL = 'APP_URL'
 export const APP_PORT = 'APP_PORT'
+export const DATABASE_HOST = 'DATABASE_HOST'
 export const DATABASE_NAME = 'DATABASE_NAME'
 export const DATABASE_USER = 'DATABASE_USER'
 export const DATABASE_PASSWORD = 'DATABASE_PASSWORD'

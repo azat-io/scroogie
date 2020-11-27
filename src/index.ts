@@ -29,6 +29,7 @@ import {
 import {
   APP_URL,
   APP_PORT,
+  DATABASE_HOST,
   DATABASE_NAME,
   DATABASE_USER,
   DATABASE_PASSWORD,
@@ -48,6 +49,7 @@ declare global {
     export interface ProcessEnv {
       [APP_URL]: string
       [APP_PORT]: string
+      [DATABASE_HOST]: string
       [DATABASE_NAME]: string
       [DATABASE_USER]: string
       [DATABASE_PASSWORD]: string
