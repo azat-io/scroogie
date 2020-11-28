@@ -18,8 +18,9 @@ RUN apk update && apk upgrade && \
     chromium@edge \
     nss@edge \
     freetype@edge \
-      harfbuzz@edge
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+    harfbuzz@edge
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD 1
+ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
 RUN apk add --update ttf-dejavu fontconfig && rm -rf /var/cache/apk/*
 
 # Change timezone on Moscow
@@ -30,5 +31,6 @@ RUN apk add --update tzdata && \
   echo $TZ > /etc/timezone && apk del tzdata
 
 RUN yarn set version berry
+CMD yarn
 CMD make start
 EXPOSE $APP_PORT

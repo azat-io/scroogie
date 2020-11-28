@@ -1,0 +1,85 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+    pull_request:
+
+env:
+  IMAGE_NAME: scroogie
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test image
+        run: |
+          touch .env
+          echo APP_URL=${{ secrets.APP_URL }} >> .env
+          echo APP_PORT=${{ secrets.APP_PORT }} >> .env
+          echo DATABASE_HOST=${{ secrets.DATABASE_HOST }} >> .env
+          echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
+          echo DATABASE_USER=${{ secrets.DATABASE_USER }} >> .env
+          echo DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} >> .env
+          echo GIPHY_API_KEY=${{ secrets.GIPHY_API_KEY }} >> .env
+          echo TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }} >> .env
+          echo TELEGRAM_USERS=${{ secrets.TELEGRAM_USERS }} >> .env
+          if [ -f docker-compose.test.yml ]; then
+            docker-compose --file docker-compose.test.yml build
+            docker-compose --file docker-compose.test.yml run sut
+          else
+            docker build . --file dockerfile
+          fi
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - name: Clean
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          USERNAME: ${{ secrets.SERVER_USERNAME }}
+          KEY: ${{ secrets.SERVER_KEY }}
+          script: rm -rf /opt/scroogie
+
+      - uses: actions/checkout@v2
+      - name: Copy
+        uses: appleboy/scp-action@master
+        env:
+          HOST: ${{ secrets.SERVER_HOST }}
+          USERNAME: ${{ secrets.SERVER_USERNAME }}
+          KEY: ${{ secrets.SERVER_KEY }}
+        with:
+          source: '.'
+          target: /opt/scroogie
+
+      - name: Execute
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          USERNAME: ${{ secrets.SERVER_USERNAME }}
+          KEY: ${{ secrets.SERVER_KEY }}
+          script: |
+            docker stop $(echo $IMAGE_NAME)
+            docker rm $(echo $IMAGE_NAME)
+            cd /opt/scroogie
+            rm .env
+            touch .env
+            echo APP_URL=${{ secrets.APP_URL }} >> .env
+            echo APP_PORT=${{ secrets.APP_PORT }} >> .env
+            echo DATABASE_HOST=${{ secrets.DATABASE_HOST }} >> .env
+            echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
+            echo DATABASE_USER=${{ secrets.DATABASE_USER }} >> .env
+            echo DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} >> .env
+            echo GIPHY_API_KEY=${{ secrets.GIPHY_API_KEY }} >> .env
+            echo TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }} >> .env
+            echo TELEGRAM_USERS=${{ secrets.TELEGRAM_USERS }} >> .env
+            docker-compose down
+            docker-compose up --detach --force-recreate
+            docker ps -a
