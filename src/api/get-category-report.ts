@@ -12,8 +12,7 @@ import {
   descend,
   equals,
   divide,
-  eqBy,
-  groupWith,
+  groupBy,
   head,
   ifElse,
   inc,
@@ -27,6 +26,7 @@ import {
   reduce,
   sort,
   splitAt,
+  values,
   when,
 } from 'ramda'
 
@@ -59,9 +59,11 @@ const getCategoryReport = async () => {
       addedAt: BetweenDates,
     },
   })
-  const segmentByCategoryId = groupWith(
-    eqBy(path(['category', 'id'])) as (purchase: Purchase) => boolean,
-  )
+  const segmentByCategoryId = compose(
+    values,
+    groupBy(path(['category', 'id']) as (purchase: Purchase) => string),
+  ) as (purchases: Purchase[]) => Purchase[][]
+
   const segmentedPurchases = segmentByCategoryId(purchases)
   const colors: string[] = [
     '#869B76',
