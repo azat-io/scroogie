@@ -22,23 +22,33 @@ import {
 } from 'ramda'
 
 import { getData, getSettings } from '.'
-import { DataElement } from '../typings'
+import { Cost, DataElement } from '../typings'
 import { env, formatMoney, isOdd, reduceIndexed } from '../utils'
 
 const getReport = async () => {
   const settings = await getSettings()
   const budget: number = propOr(0, 'budget', settings)
+  const costs: Cost[] = propOr(0, 'costs', settings)
   const isNegative = both(is(Number), gt(0))
   const data: DataElement[] = await getData()
   const splitArray = (array: any[]) =>
     splitEvery(Math.ceil(divide(length(array), 2)), array)
   const splittedData: DataElement[][] = splitArray(data)
   const totalCost: number = reduce(
-    (result, { dayCost }) => add(result, dayCost),
+    (result: number, { dayCost }: { dayCost: number }) => add(result, dayCost),
     0,
     data,
   )
-  const totalBudget: number = subtract(budget, totalCost)
+  const totalBudget: number = compose(
+    subtract(totalCost),
+    subtract(
+      reduce(
+        (accumulator: number, { sum }: Cost) => add(accumulator, sum),
+        0,
+        costs,
+      ),
+    ),
+  )(budget)
 
   /* eslint-disable @typescript-eslint/indent */
   // prettier-ignore
