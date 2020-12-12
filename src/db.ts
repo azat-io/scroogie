@@ -12,7 +12,7 @@ import { Category, Purchase, Settings } from './entities'
 
 import { env } from './utils'
 
-const dbConfig: PostgresConnectionOptions = {
+export const dbConfig: PostgresConnectionOptions = {
   type: 'postgres',
   port: 5432,
   host: env(DATABASE_HOST),

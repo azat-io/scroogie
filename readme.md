@@ -27,6 +27,8 @@ A telegram bot that helps to calculate the financial expenses of a family. Inspi
 - `DATABASE_USER` - user that has access to PostgreSQL database
 - `DATABASE_PASSWORD` - password of the database
 - `GIPHY_API_KEY` - API key for [Giphy](https://developers.giphy.com/docs/api/)
+- `TELEGRAM_BOT_HELPER_TOKEN` - token of helper bot (for DB dumps)
+- `TELEGRAM_BOT_HELPER_USER` - bot admin ID, for example `109470339`
 - `TELEGRAM_BOT_TOKEN` - our bot token
 - `TELEGRAM_USERS` - array of Telegram user ids
 

@@ -1,5 +1,6 @@
 import Koa, { Context } from 'koa'
 import koaBodyparser from 'koa-bodyparser'
+import schedule from 'node-schedule'
 
 import {
   __,
@@ -34,12 +35,15 @@ import {
   DATABASE_USER,
   DATABASE_PASSWORD,
   GIPHY_API_KEY,
+  TELEGRAM_BOT_HELPER_TOKEN,
+  TELEGRAM_BOT_HELPER_USER,
   TELEGRAM_BOT_TOKEN,
   TELEGRAM_USERS,
 } from './constants'
 
 import bot from './bot'
 import db from './db'
+import dump from './dump'
 import { dotPath, env, log } from './utils'
 
 import './library'
@@ -54,6 +58,8 @@ declare global {
       [DATABASE_USER]: string
       [DATABASE_PASSWORD]: string
       [GIPHY_API_KEY]: string
+      [TELEGRAM_BOT_HELPER_TOKEN]: string
+      [TELEGRAM_BOT_HELPER_USER]: string
       [TELEGRAM_BOT_TOKEN]: string
       [TELEGRAM_USERS]: string
     }
@@ -109,3 +115,5 @@ app.listen(env(APP_PORT), () => {
 })
 
 db.connect().then(() => log('Database:', 'connected'))
+
+schedule.scheduleJob('0 0 * * *', dump)

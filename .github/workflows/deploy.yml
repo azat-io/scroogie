@@ -78,6 +78,8 @@ jobs:
             echo DATABASE_USER=${{ secrets.DATABASE_USER }} >> .env
             echo DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} >> .env
             echo GIPHY_API_KEY=${{ secrets.GIPHY_API_KEY }} >> .env
+            echo TELEGRAM_BOT_HELPER_TOKEN=${{ secrets.TELEGRAM_BOT_HELPER_TOKEN }} >> .env
+            echo TELEGRAM_BOT_HELPER_USER=${{ secrets.TELEGRAM_BOT_HELPER_USER }} >> .env
             echo TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }} >> .env
             echo TELEGRAM_USERS=${{ secrets.TELEGRAM_USERS }} >> .env
             docker-compose down
