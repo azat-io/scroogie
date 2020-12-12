@@ -9,6 +9,7 @@ import {
   divide,
   gt,
   head,
+  identity,
   ifElse,
   is,
   join,
@@ -69,7 +70,7 @@ const getReport = async () => {
             'border: 1px solid #333',
           '">',
             '<tr>',
-              reduce((result, title) =>
+              reduce((result: string, title: string) =>
                 concat(result, join('', [
                   '<th style="',
                     'font-size: 12px;',
@@ -86,7 +87,7 @@ const getReport = async () => {
           '<tbody>',
             reduceIndexed((
               result: string,
-              { date, dayCost, dayBudget }: DataElement,
+              { date, dayCost, dayBudget, isToday }: DataElement,
               index: number,
             ): string => concat(
               result,
@@ -98,7 +99,11 @@ const getReport = async () => {
                   'background: ',
                   ifElse(isOdd, always('#f8f8f8'), always('#fff'))(index),
                 '">',
-                  '<td style="padding: 16px 12px">',
+                  '<td style="',
+                    'padding: 16px 12px;',
+                    'font-weight: ',
+                    ifElse(identity, always('bold'), always('normal'))(isToday),
+                  '">',
                     date,
                   '</td>',
                   '<td style="padding: 16px 12px">',
