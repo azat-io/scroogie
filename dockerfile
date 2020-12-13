@@ -4,6 +4,8 @@ WORKDIR /app
 
 # Copy app files
 
+RUN yarn set version berry
+CMD yarn
 COPY .yarn/ ./.yarn
 COPY src ./src
 COPY .env .pnp.js .yarnrc.yml makefile package.json tsconfig.json yarn.lock ./
@@ -30,7 +32,5 @@ RUN apk add --update tzdata && \
   cp /usr/share/zoneinfo/$TZ /etc/localtime && \
   echo $TZ > /etc/timezone && apk del tzdata
 
-RUN yarn set version berry
-CMD yarn
 CMD make start
 EXPOSE $APP_PORT

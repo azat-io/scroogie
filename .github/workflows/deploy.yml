@@ -83,5 +83,5 @@ jobs:
             echo TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }} >> .env
             echo TELEGRAM_USERS=${{ secrets.TELEGRAM_USERS }} >> .env
             docker-compose down
-            docker-compose up --detach --force-recreate
+            docker-compose up --detach --no-deps --build
             docker ps -a

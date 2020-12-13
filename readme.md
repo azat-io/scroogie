@@ -1,6 +1,7 @@
 # Scroogie
 
-[![Build Status](https://travis-ci.org/azat-io/scroogie.svg?branch=main)](https://travis-ci.org/azat-io/scroogie)
+![Deploy](https://github.com/azat-io/scroogie/workflows/Deploy/badge.svg)
+![Test](https://github.com/azat-io/scroogie/workflows/Test/badge.svg)
 [![GitHub issues](https://img.shields.io/github/issues/azat-io/scroogie?color=brightgreen)](https://github.com/azat-io/scroogie/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/azat-io/scroogie?color=brightgreen)](https://github.com/azat-io/scroogie/pulls)
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/azat-io/scroogie?color=brightgreen)](https://github.com/azat-io/scroogie/blob/master/package.json)
